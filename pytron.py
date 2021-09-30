@@ -3,7 +3,7 @@ from pygame.locals import *
 from map import *
 from players import *
 
-length = 30
+length = 32
 dim = length**2
 
 mainmap = Map(length)
@@ -27,7 +27,7 @@ def game_events():
             for player in mainmap.players:
                 if event.key in player.key_dict:
                     player.PlayerOrientation(player.key_dict[event.key])
-                    print(player.name, player.key_dict[event.key], player.orientation)
+                    #print(player.name, player.key_dict[event.key], player.orientation)
             if event.key == K_p:
                 newplayer = Player("Random Player", GRAY, default_player_extra_keys, length-1)
                 mainmap.PlacePlayer(surface, newplayer)

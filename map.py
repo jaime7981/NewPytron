@@ -13,7 +13,7 @@ class Map():
             for ycord in range(self.dimention):
                 x = xcord*self.dimention
                 y = ycord*self.dimention
-                #pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
+                pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
                 aux.append(0)
             self.mappositions.append(aux)
 
@@ -25,9 +25,45 @@ class Map():
             for ycord in range(self.dimention):
                 x = xcord*self.dimention
                 y = ycord*self.dimention
-                #pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
+                pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
                 aux.append(0)
             self.mappositions.append(aux)
+
+    def PlayerDistanceLine(self):
+        counterlist = {"up": 0, "down": 0, "left": 0, "right": 0}
+        for player in self.players:
+            x = player.position[0]
+            y = player.position[1]
+
+            for xcord in range(x + 1, len(self.mappositions)):
+                if self.mappositions[xcord][y] == 1 and player.orientation["left"] != 1:
+                    counterlist["right"] = xcord - x
+                    break
+                else:
+                    counterlist["right"] = len(self.mappositions) - x
+            
+            for xcord in range(x-1, 0, -1):
+                if self.mappositions[xcord][y] == 1 and player.orientation["right"] != 1:
+                    counterlist["left"] = x - xcord
+                    break
+                else:
+                    counterlist["left"] = x
+
+            for ycord in range(y + 1, len(self.mappositions)):
+                if self.mappositions[x][ycord] == 1 and player.orientation["up"] != 1:
+                    counterlist["down"] = ycord - y
+                    break
+                else:
+                    counterlist["down"] = len(self.mappositions) - y
+
+            for ycord in range(y-1, 0, -1):
+                if self.mappositions[x][ycord] == 1 and player.orientation["down"] != 1:
+                    counterlist["up"] = y - ycord
+                    break
+                else:
+                    counterlist["up"] = y
+                        
+        return counterlist
 
     def PlacePlayer(self, surface, player):
         for pos in player.position:
@@ -51,8 +87,6 @@ class Map():
             for orientation in player.orientation:
                 if player.orientation[orientation] == 1:
                     orient = orientation
-                    print(orient)
-                    print(player.position)
             
             #Move the player between the walls
             if orient == "left":
