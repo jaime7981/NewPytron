@@ -3,11 +3,6 @@ import random
 import pygame
 from pygame.locals import *
 
-#1.- The player have to move
-#2.- The player have to change direction
-#3.- The player have to draw his line
-#4.- Colisions are needed
-
 class Player():
     def __init__(self, name, color, player_keys, mapdimention):
         self.name = name

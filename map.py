@@ -1,11 +1,6 @@
 import pygame
 from players import *
 
-#1.- Make squares
-#2.- Spawn players
-#3.- Move players
-#4.- Set bundaries
-
 class Map():
     def __init__(self, dimention):
         self.dimention = dimention
@@ -18,7 +13,7 @@ class Map():
             for ycord in range(self.dimention):
                 x = xcord*self.dimention
                 y = ycord*self.dimention
-                pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
+                #pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
                 aux.append(0)
             self.mappositions.append(aux)
 
@@ -30,7 +25,7 @@ class Map():
             for ycord in range(self.dimention):
                 x = xcord*self.dimention
                 y = ycord*self.dimention
-                pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
+                #pygame.draw.rect(surface, (225,225,225), (x, y, self.dimention, self.dimention), 2)
                 aux.append(0)
             self.mappositions.append(aux)
 
