@@ -3,9 +3,13 @@ import random
 import pygame
 from pygame.locals import *
 
+playercount = 0
+
 class Player():
-    def __init__(self, name, color, player_keys, mapdimention):
+    def __init__(self, name, color, player_keys, mapdimention, id, AI):
         self.name = name
+        self.playerid = id
+        self.AI = AI
         self.position = [random.randint(0,mapdimention), random.randint(0,mapdimention)]
         self.color = color
         self.key_dict = {player_keys[0]:"up", player_keys[1]:"down", player_keys[2]:"left", player_keys[3]:"right"}

@@ -6,6 +6,9 @@ from players import *
 length = 32
 dim = length**2
 
+pygame.init()
+surface = pygame.display.set_mode((dim+1,dim+1))
+
 mainmap = Map(length)
 
 default_player_one_keys = [K_w, K_s, K_a, K_d]
@@ -29,19 +32,21 @@ def game_events():
                     player.PlayerOrientation(player.key_dict[event.key])
                     #print(player.name, player.key_dict[event.key], player.orientation)
             if event.key == K_p:
-                newplayer = Player("Random Player", GRAY, default_player_extra_keys, length-1)
-                mainmap.PlacePlayer(surface, newplayer)
+                newplayer = Player("Random Player", GRAY, default_player_extra_keys, length-1, 3, True)
+                mainmap.PlacePlayer(surface, newplayer) == True
             elif event.key == K_c:
                 mainmap.ClearMap(surface)
 
 def main():
     mainmap.DrawMap(surface)
 
-    playerone = Player("Jamie", RED, default_player_one_keys, length-1)
+    playerid = 1
+
+    playerone = Player("Jamie", RED, default_player_one_keys, length-1, playerid, False)
     mainmap.PlacePlayer(surface, playerone)
 
-    playerotwo = Player("Manuel", GREEN, default_player_two_keys, length-1)
-    mainmap.PlacePlayer(surface, playerotwo)
+    #playerotwo = Player("Manuel", GREEN, default_player_two_keys, length-1, 2, False)
+    #mainmap.PlacePlayer(surface, playerotwo)
 
     while True:
         game_events()
@@ -49,9 +54,7 @@ def main():
         pygame.display.update()
         clock.tick(10)
 
-if __name__ == "__main__":    
-    pygame.init()
+if __name__ == "__main__":
     clock = pygame.time.Clock()
-    surface = pygame.display.set_mode((dim+1,dim+1))
     surface.fill((0,0,0))
     main()

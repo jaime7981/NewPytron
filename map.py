@@ -6,6 +6,7 @@ class Map():
         self.dimention = dimention
         self.mappositions = []
         self.players = []
+        self.playercount = 1
 
     def DrawMap(self,surface):
         for xcord in range(self.dimention):
@@ -63,7 +64,7 @@ class Map():
                 else:
                     counterlist["up"] = y
                         
-        return counterlist
+        print(counterlist)
 
     def PlacePlayer(self, surface, player):
         for pos in player.position:
@@ -71,7 +72,10 @@ class Map():
                 return False
         
         if self.mappositions[player.position[0]][player.position[1]] == 0:
-            self.mappositions[player.position[0]][player.position[1]] = 1
+            if player.playerid != 1:
+                self.playercount += 1
+            player.playerid = self.playercount
+            self.mappositions[player.position[0]][player.position[1]] = player.playerid
             self.players.append(player)
         else:
             return False
@@ -79,6 +83,7 @@ class Map():
         x = player.position[0]*self.dimention
         y = player.position[1]*self.dimention
         pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+        print(player.playerid)
         return True
 
     def MovePlayers(self, surface):
@@ -90,45 +95,81 @@ class Map():
             
             #Move the player between the walls
             if orient == "left":
-                if player.position[0] - 1 >= 0 and self.mappositions[player.position[0] - 1][player.position[1]] != 1:
-                    self.mappositions[player.position[0] - 1][player.position[1]] = 1
-                    player.position[0] -= 1
-                    x = player.position[0]*self.dimention
-                    y = player.position[1]*self.dimention
-                    pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+                if player.position[0] - 1 >= 0:
+                    if self.mappositions[player.position[0] - 1][player.position[1]] == 0:
+                        self.MoveLeft(surface, player)
+                    elif player.AI == True and self.mappositions[player.position[0] - 1][player.position[1]] != 1 and self.mappositions[player.position[0] - 1][player.position[1]] != player.playerid:
+                        self.MoveLeft(surface, player)
+                    else:
+                        print(player.name + " Loose by crash")
+                        self.players.remove(player)
                 else:
-                    print(player.name + " Loose")
+                    print(player.name + " Loose by falling off")
                     self.players.remove(player)
                     
             elif orient == "right":
-                if player.position[0] + 1 < self.dimention and self.mappositions[player.position[0] + 1][player.position[1]] != 1:
-                    self.mappositions[player.position[0] + 1][player.position[1]] = 1
-                    player.position[0] += 1
-                    x = player.position[0]*self.dimention
-                    y = player.position[1]*self.dimention
-                    pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+                if player.position[0] + 1 < self.dimention:
+                    if self.mappositions[player.position[0] + 1][player.position[1]] == 0:
+                        self.MoveRight(surface, player)
+                    elif player.AI == True and self.mappositions[player.position[0] + 1][player.position[1]] != 1 and self.mappositions[player.position[0] + 1][player.position[1]] != player.playerid:
+                        self.MoveRight(surface, player)
+                    else:
+                        print(player.name + " Loose by crash")
+                        self.players.remove(player)
                 else:
-                    print(player.name + " Loose")
+                    print(player.name + " Loose by falling off")
                     self.players.remove(player)
 
             elif orient == "up":
-                if player.position[1] - 1 >= 0 and self.mappositions[player.position[0]][player.position[1] - 1] != 1:
-                    self.mappositions[player.position[0]][player.position[1] - 1] = 1
-                    player.position[1] -= 1
-                    x = player.position[0]*self.dimention
-                    y = player.position[1]*self.dimention
-                    pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+                if player.position[1] - 1 >= 0:
+                    if self.mappositions[player.position[0]][player.position[1] - 1] == 0:
+                        self.MoveUp(surface, player)
+                    elif player.AI == True and self.mappositions[player.position[0]][player.position[1] - 1] != 1 and self.mappositions[player.position[0]][player.position[1] - 1] != player.playerid:
+                        self.MoveUp(surface, player)
+                    else:
+                        print(player.name + " Loose by crash")
+                        self.players.remove(player)
                 else:
-                    print(player.name + " Loose")
+                    print(player.name + " Loose by falling off")
                     self.players.remove(player)
 
             elif orient == "down":
-                if player.position[1] + 1 < self.dimention and self.mappositions[player.position[0]][player.position[1] + 1] != 1:
-                    self.mappositions[player.position[0]][player.position[1] + 1] = 1
-                    player.position[1] += 1
-                    x = player.position[0]*self.dimention
-                    y = player.position[1]*self.dimention
-                    pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+                if player.position[1] + 1 < self.dimention:
+                    if self.mappositions[player.position[0]][player.position[1] + 1] == 0:
+                        self.MoveDown(surface, player)
+                    elif player.AI == True and self.mappositions[player.position[0]][player.position[1] + 1] != 1 and self.mappositions[player.position[0]][player.position[1] + 1] != player.playerid:
+                        self.MoveDown(surface, player)
+                    else:
+                        print(player.name + " Loose by crash")
+                        self.players.remove(player)
                 else:
-                    print(player.name + " Loose")
+                    print(player.name + " Loose by falling off")
                     self.players.remove(player)
+
+    def MoveUp(self, surface, player):
+        self.mappositions[player.position[0]][player.position[1] - 1] = player.playerid
+        player.position[1] -= 1
+        x = player.position[0]*self.dimention
+        y = player.position[1]*self.dimention
+        pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+        
+    def MoveDown(self, surface, player):
+        self.mappositions[player.position[0]][player.position[1] + 1] = player.playerid
+        player.position[1] += 1
+        x = player.position[0]*self.dimention
+        y = player.position[1]*self.dimention
+        pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+    
+    def MoveLeft(self, surface, player):
+        self.mappositions[player.position[0] - 1][player.position[1]] = player.playerid
+        player.position[0] -= 1
+        x = player.position[0]*self.dimention
+        y = player.position[1]*self.dimention
+        pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
+    
+    def MoveRight(self, surface, player):
+        self.mappositions[player.position[0] + 1][player.position[1]] = player.playerid
+        player.position[0] += 1
+        x = player.position[0]*self.dimention
+        y = player.position[1]*self.dimention
+        pygame.draw.rect(surface, player.color, (x, y, self.dimention, self.dimention))
